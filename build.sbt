@@ -8,17 +8,26 @@ scalaVersion := "2.11.12"
 
  val circeVersion = "0.11.1"
 
-libraryDependencies ++= (Seq(
+libraryDependencies ++= Seq(
   "org.scalactic" %% "scalactic" % "3.0.8",
   "org.scalatest" %% "scalatest" % "3.0.8" % "test",
-  "org.apache.spark" %% "spark-core" % "2.4.3" %  Provided,
-  "org.apache.spark" %% "spark-streaming" % "2.4.3" % Provided,
-  "org.apache.spark" %% "spark-sql" % "2.4.3" % Provided,
   "com.typesafe" % "config" % "1.3.4",
   "org.apache.kafka" %% "kafka" % "2.3.0",
-  "ch.qos.logback" % "logback-classic" % "1.2.3",
-  "ch.qos.logback" % "logback-core" % "1.2.3"
-) ++ circeDeps)
+  "org.slf4j" % "log4j-over-slf4j" % "1.7.6"
+
+) ++ circeDeps ++ sparkDeps
+
+val sparkDeps = Seq(
+  "org.apache.spark" %% "spark-core" % "2.4.4" %  Provided,
+  "org.apache.spark" %% "spark-streaming" % "2.4.4" % Provided,
+  "org.apache.spark" %% "spark-sql" % "2.4.4" % Provided
+).map( sth =>
+  sth excludeAll (
+    ExclusionRule("log4j"),
+    ExclusionRule("slf4j-log4j12")
+  )
+)
+
 
 val circeDeps = Seq(
   "io.circe" %% "circe-core",
@@ -37,4 +46,4 @@ lazy val commonSettings = Seq(
 lazy val root = (project in file("app"))
   .settings(commonSettings: _*)
 
-addCommandAlias("sparkBuildJar", ";clean; assembly")
+addCommandAlias("buildSparkJar", ";clean; assembly")

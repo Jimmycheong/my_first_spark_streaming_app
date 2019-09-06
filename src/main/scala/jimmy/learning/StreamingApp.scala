@@ -1,17 +1,18 @@
 package jimmy.learning
 
-import org.apache.spark.sql.Row
-import io.circe._, io.circe.generic.auto._, io.circe.parser._, io.circe.syntax._
+import io.circe.generic.auto._
+import io.circe.parser._
+import org.slf4j.LoggerFactory
 
 object StreamingApp extends Configuration {
 
   def main(args: Array[String]): Unit = {
 
-    val sparkSession = buildSparkSession()
+    val logger = LoggerFactory.getLogger(getClass)
 
-    val logbackPath = getClass.getResource("/logback.xml").getPath
-    sparkSession.sparkContext.addFile(
-      "/Users/cheong1/PersonalDev/my_first_spark_streaming_app/target/scala-2.11/classes/logback.xml")
+    logger.info("Starting StreamingApp...")
+
+    val sparkSession = buildSparkSession()
 
     import sparkSession.implicits._
 
@@ -53,7 +54,6 @@ object StreamingApp extends Configuration {
       sparkSession.sql(s"SELECT * FROM $writeTableName").show()
       Thread.sleep(1000)
     }
-
     applicantQuery.awaitTermination()
 
   }

@@ -17,7 +17,6 @@ Run the following command using the spark-submit executable:
 ```
 ./bin/spark-submit \
     --master local[2] \
-    --driver-java-options "-Dlogback.configurationFile=/logback.xml"
     --packages org.apache.spark:spark-sql-kafka-0-10_2.12:2.4.3 \
     <path to jar>
      100
